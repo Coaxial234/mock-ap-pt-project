@@ -1,1 +1,5 @@
-tiles.setCurrentTilemap(tilemap`level2`)
+if (true) {
+    if (true) {
+    	
+    }
+}
