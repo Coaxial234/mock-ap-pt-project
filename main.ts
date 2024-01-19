@@ -1,28 +1,58 @@
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().row != 0) {
         tiles.placeOnTile(mySprite, tiles.getTileLocation(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row - 1))
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
+            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
+            game.splash("Game Over")
+        }
     }
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().column != 0) {
         tiles.placeOnTile(mySprite, tiles.getTileLocation(mySprite.tilemapLocation().column - 1, mySprite.tilemapLocation().row))
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
+            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
+            game.splash("Game Over")
+        }
     }
 })
-function checkbomb (list: any[]) {
-    if (true) {
-    	
+function checkbomb (col: number, row: number) {
+    bombcount = 0
+    for (let value of tiles.getTilesByType(assets.tile`myTile0`)) {
+        if (value.getNeighboringLocation(CollisionDirection.Left) == tiles.getTileLocation(col, row)) {
+            bombcount += 1
+        }
+        if (value.getNeighboringLocation(CollisionDirection.Top) == tiles.getTileLocation(col, row)) {
+            bombcount += 1
+        }
+        if (value.getNeighboringLocation(CollisionDirection.Right) == tiles.getTileLocation(col, row)) {
+            bombcount += 1
+        }
+        if (value.getNeighboringLocation(CollisionDirection.Bottom) == tiles.getTileLocation(col, row)) {
+            bombcount += 1
+        }
     }
+    return bombcount
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().column != 15) {
         tiles.placeOnTile(mySprite, tiles.getTileLocation(mySprite.tilemapLocation().column + 1, mySprite.tilemapLocation().row))
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
+            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
+            game.splash("Game Over")
+        }
     }
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().row != 15) {
         tiles.placeOnTile(mySprite, tiles.getTileLocation(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row + 1))
+        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
+            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
+            game.splash("Game Over")
+        }
     }
 })
+let bombcount = 0
 let mySprite: Sprite = null
 scene.setBackgroundImage(img`
     1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
