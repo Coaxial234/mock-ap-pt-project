@@ -225,8 +225,8 @@ for (let index = 0; index < 32; index++) {
         }
     }
 }
-for (let index = 0; index <= 13; index++) {
-    for (let value = 0; value <= 13; value++) {
+for (let index = 0; index <= 15; index++) {
+    for (let value = 0; value <= 15; value++) {
         if (Math.percentChance(15) && tiles.tileAtLocationEquals(tiles.getTileLocation(index, value), assets.tile`myTile`) && index + value > 3) {
             tiles.setTileAt(tiles.getTileLocation(index, value), assets.tile`myTile0`)
         }
