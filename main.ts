@@ -12,7 +12,8 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 function checkbomb (col: number, row: number) {
     bombcount = 0
-    for (let bomb of tiles.getTilesByType(assets.tile`myTile0`)) {
+    bombarray = tiles.getTilesByType(assets.tile`myTile0`)
+    for (let bomb of bombarray) {
         if (row == bomb.row + 1 && col == bomb.column) {
             bombcount += 1
         }
@@ -26,7 +27,15 @@ function checkbomb (col: number, row: number) {
             bombcount += 1
         }
     }
-    return bombcount
+    if (bombcount == 1) {
+        tiles.setTileAt(tiles.getTileLocation(col, row), assets.tile`myTile4`)
+    } else if (bombcount == 2) {
+        tiles.setTileAt(tiles.getTileLocation(col, row), assets.tile`myTile5`)
+    } else if (bombcount == 3) {
+        tiles.setTileAt(tiles.getTileLocation(col, row), assets.tile`myTile6`)
+    } else {
+        tiles.setTileAt(tiles.getTileLocation(col, row), assets.tile`myTile7`)
+    }
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().column != 15) {
@@ -49,18 +58,11 @@ function move () {
         game.splash("You Win!")
         game.reset()
     } else {
-        info.setScore(checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row))
-        if (checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row) == 1) {
-        	
-        } else if (checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row) == 2) {
-        	
-        } else if (checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row) == 3) {
-        	
-        } else {
-        	
-        }
+        checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row)
+        info.setScore(bombcount)
     }
 }
+let bombarray: tiles.Location[] = []
 let bombcount = 0
 let mySprite: Sprite = null
 scene.setBackgroundImage(img`
@@ -204,12 +206,12 @@ mySprite = sprites.create(img`
     . . . f f f f f f f f e e e e . 
     . . . f f f . . . f f . . . . . 
     `, SpriteKind.Player)
-tiles.setTileAt(tiles.getTileLocation(15, 15), assets.tile`myTile1`)
 scene.cameraFollowSprite(mySprite)
 tiles.placeOnTile(mySprite, tiles.getTileLocation(0, 0))
 let current_tile_generator = tiles.getTileLocation(0, 0)
 let path: tiles.Location[] = []
 let value = 0
+bombcount = 0
 for (let index = 0; index < 32; index++) {
     path.push(current_tile_generator)
     tiles.setTileAt(current_tile_generator, assets.tile`myTile1`)
@@ -225,10 +227,15 @@ for (let index = 0; index < 32; index++) {
         }
     }
 }
-for (let index = 0; index <= 13; index++) {
-    for (let value = 0; value <= 13; value++) {
+for (let index = 0; index <= 15; index++) {
+    for (let value = 0; value <= 15; value++) {
         if (Math.percentChance(15) && tiles.tileAtLocationEquals(tiles.getTileLocation(index, value), assets.tile`myTile`) && index + value > 3) {
             tiles.setTileAt(tiles.getTileLocation(index, value), assets.tile`myTile0`)
         }
     }
 }
+checkbomb(0, 1)
+checkbomb(1, 0)
+checkbomb(1, 1)
+checkbomb(0, 0)
+info.setScore(bombcount)
