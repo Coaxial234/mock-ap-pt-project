@@ -1,34 +1,28 @@
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().row != 0) {
         tiles.placeOnTile(mySprite, tiles.getTileLocation(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row - 1))
-        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
-            game.splash("Game Over")
-        }
+        move()
     }
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().column != 0) {
         tiles.placeOnTile(mySprite, tiles.getTileLocation(mySprite.tilemapLocation().column - 1, mySprite.tilemapLocation().row))
-        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
-            game.splash("Game Over")
-        }
+        move()
     }
 })
 function checkbomb (col: number, row: number) {
     bombcount = 0
-    for (let value of tiles.getTilesByType(assets.tile`myTile0`)) {
-        if (value.getNeighboringLocation(CollisionDirection.Left) == tiles.getTileLocation(col, row)) {
+    for (let bomb of tiles.getTilesByType(assets.tile`myTile0`)) {
+        if (row == bomb.row + 1 && col == bomb.column) {
             bombcount += 1
         }
-        if (value.getNeighboringLocation(CollisionDirection.Top) == tiles.getTileLocation(col, row)) {
+        if (row == bomb.row - 1 && col == bomb.column) {
             bombcount += 1
         }
-        if (value.getNeighboringLocation(CollisionDirection.Right) == tiles.getTileLocation(col, row)) {
+        if (row == bomb.row && col == bomb.column + 1) {
             bombcount += 1
         }
-        if (value.getNeighboringLocation(CollisionDirection.Bottom) == tiles.getTileLocation(col, row)) {
+        if (row == bomb.row && col == bomb.column - 1) {
             bombcount += 1
         }
     }
@@ -37,21 +31,36 @@ function checkbomb (col: number, row: number) {
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().column != 15) {
         tiles.placeOnTile(mySprite, tiles.getTileLocation(mySprite.tilemapLocation().column + 1, mySprite.tilemapLocation().row))
-        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
-            game.splash("Game Over")
-        }
+        move()
     }
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.tilemapLocation().row != 15) {
         tiles.placeOnTile(mySprite, tiles.getTileLocation(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row + 1))
-        if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
-            tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
-            game.splash("Game Over")
-        }
+        move()
     }
 })
+function move () {
+    if (mySprite.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
+        tiles.setTileAt(mySprite.tilemapLocation(), assets.tile`myTile2`)
+        game.splash("Game Over")
+        game.reset()
+    } else if (mySprite.tilemapLocation().column == 15 && mySprite.tilemapLocation().row == 15) {
+        game.splash("You Win!")
+        game.reset()
+    } else {
+        info.setScore(checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row))
+        if (checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row) == 1) {
+        	
+        } else if (checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row) == 2) {
+        	
+        } else if (checkbomb(mySprite.tilemapLocation().column, mySprite.tilemapLocation().row) == 3) {
+        	
+        } else {
+        	
+        }
+    }
+}
 let bombcount = 0
 let mySprite: Sprite = null
 scene.setBackgroundImage(img`
@@ -216,8 +225,8 @@ for (let index = 0; index < 32; index++) {
         }
     }
 }
-for (let index = 0; index <= 15; index++) {
-    for (let value = 0; value <= 15; value++) {
+for (let index = 0; index <= 13; index++) {
+    for (let value = 0; value <= 13; value++) {
         if (Math.percentChance(15) && tiles.tileAtLocationEquals(tiles.getTileLocation(index, value), assets.tile`myTile`) && index + value > 3) {
             tiles.setTileAt(tiles.getTileLocation(index, value), assets.tile`myTile0`)
         }
